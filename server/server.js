@@ -13,6 +13,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 
+const PORT = 8080;
 const httpServer = http.createServer(app);
 
 const socketServer = new WebSocketServer({
@@ -21,3 +22,17 @@ const socketServer = new WebSocketServer({
 });
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
+
+const server = new ApolloServer({ schema });
+
+(async () => {
+  try{
+  useServer({ schema }, socketServer)
+  await server.start();
+  httpServer.listen({ port: PORT }, () => {
+      console.log(`Server listening on http://localhost:${PORT}${server.graphqlPath}`);
+    });
+
+
+  }
+})
