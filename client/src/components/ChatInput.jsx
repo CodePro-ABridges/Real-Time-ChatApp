@@ -52,7 +52,7 @@ const Container = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 5% 95%;
-  background-color: #080420;
+  background-color: #7d5e3c; /* Adjusted to a warm brown, common in retro designs */
   padding: 0 2rem;
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     padding: 0 1rem;
@@ -61,26 +61,26 @@ const Container = styled.div`
   .button-container {
     display: flex;
     align-items: center;
-    color: white;
+    color: #ffd700; /* Adjusted to a golden yellow for text, giving a vibrant retro feel */
     gap: 1rem;
     .emoji {
       position: relative;
       svg {
         font-size: 1.5rem;
-        color: #ffff00c8;
+        color: #f4a460; /* Sandy brown for emoji icons, adding to the retro vibe */
         cursor: pointer;
       }
       .emoji-picker-react {
         position: absolute;
         top: -350px;
-        background-color: #080420;
-        box-shadow: 0 5px 10px #9a86f3;
-        border-color: #9a86f3;
+        background-color: #7d5e3c; /* Matching the container background */
+        box-shadow: 0 5px 10px #decdbe; /* Softer shadow for a retro look */
+        border-color: #decdbe; /* Light pastel border, common in retro design */
         .emoji-scroll-wrapper::-webkit-scrollbar {
-          background-color: #080420;
+          background-color: #7d5e3c;
           width: 5px;
           &-thumb {
-            background-color: #9a86f3;
+            background-color: #decdbe;
           }
         }
         .emoji-categories {
@@ -90,10 +90,10 @@ const Container = styled.div`
         }
         .emoji-search {
           background-color: transparent;
-          border-color: #9a86f3;
+          border-color: #decdbe;
         }
         .emoji-group:before {
-          background-color: #080420;
+          background-color: #7d5e3c;
         }
       }
     }
@@ -104,18 +104,18 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     gap: 2rem;
-    background-color: #ffffff34;
+    background-color: #ffffff34; /* Slightly transparent white, okay as is for a soft retro look */
     input {
       width: 90%;
       height: 60%;
       background-color: transparent;
-      color: white;
+      color: #ffd700; /* Golden yellow text color */
       border: none;
       padding-left: 1rem;
       font-size: 1.2rem;
 
       &::selection {
-        background-color: #9a86f3;
+        background-color: #f4a460; /* Sandy brown selection color */
       }
       &:focus {
         outline: none;
@@ -127,7 +127,7 @@ const Container = styled.div`
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #9a86f3;
+      background-color: #f4a460; /* Sandy brown for buttons */
       border: none;
       @media screen and (min-width: 720px) and (max-width: 1080px) {
         padding: 0.3rem 1rem;
@@ -137,7 +137,7 @@ const Container = styled.div`
       }
       svg {
         font-size: 2rem;
-        color: white;
+        color: #ffd700; /* Golden yellow for SVG icons */
       }
     }
   }

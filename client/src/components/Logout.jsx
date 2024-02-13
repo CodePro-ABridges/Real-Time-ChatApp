@@ -1,15 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { BiPowerOff } from "react-icons/bi";
+import { ImPowerCord } from "react-icons/im";
 import styled from "styled-components";
 import axios from "axios";
-import { logoutRoute } from "../utils/apiRoutes.js";
+import { logoutRoute } from "../utils/mutations";
 export default function Logout() {
   const navigate = useNavigate();
   const handleClick = async () => {
-    const id = await JSON.parse(
-      localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY),
-    )._id;
+    const id = await JSON.parse(localStorage.getItem(process.env.KEY))._id;
     const data = await axios.get(`${logoutRoute}/${id}`);
     if (data.status === 200) {
       localStorage.clear();
@@ -18,7 +16,7 @@ export default function Logout() {
   };
   return (
     <Button onClick={handleClick}>
-      <BiPowerOff />
+      <ImPowerCord />
     </Button>
   );
 }

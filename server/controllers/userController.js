@@ -1,6 +1,8 @@
+// Import statements
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 
+// Async function for login
 export const login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
@@ -10,18 +12,20 @@ export const login = async (req, res, next) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)
       return res.json({ msg: "Incorrect Username or Password", status: false });
-    // Assuming the intention is to not send the password back, this operation should be corrected as it won't actually delete the password from the response
-    // Correct approach would be to use `.toObject()` or similar and then delete the password or exclude it in the query
+
+    // This approach might not work as expected because Mongoose objects are not plain JavaScript objects.
+    // Consider using `.toObject()` method or explicitly excluding the password in the query.
     return res.json({
       status: true,
-      user: user.toObject({ getters: true, virtuals: false }),
+      user: { ...user.toObject(), password: undefined },
     });
   } catch (ex) {
     next(ex);
   }
 };
 
-export const register = async (req, res, next) => {
+// Async function for register
+export const signup = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
     const usernameCheck = await User.findOne({ username });
@@ -36,16 +40,17 @@ export const register = async (req, res, next) => {
       username,
       password: hashedPassword,
     });
-    // Same note as above about deleting password before response
+
     return res.json({
       status: true,
-      user: user.toObject({ getters: true, virtuals: false }),
+      user: { ...user.toObject(), password: undefined },
     });
   } catch (ex) {
     next(ex);
   }
 };
 
+// Async function for getAllUsers
 export const getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find({ _id: { $ne: req.params.id } }).select([
@@ -60,16 +65,14 @@ export const getAllUsers = async (req, res, next) => {
   }
 };
 
+// Async function for setAvatar
 export const setAvatar = async (req, res, next) => {
   try {
     const userId = req.params.id;
     const avatarImage = req.body.image;
     const userData = await User.findByIdAndUpdate(
       userId,
-      {
-        isAvatarImageSet: true,
-        avatarImage,
-      },
+      { isAvatarImageSet: true, avatarImage },
       { new: true },
     );
     return res.json({
@@ -81,10 +84,12 @@ export const setAvatar = async (req, res, next) => {
   }
 };
 
+// Function for logOut
 export const logOut = (req, res, next) => {
   try {
     if (!req.params.id) return res.json({ msg: "User id is required" });
-    // The reference to `onlineUsers.delete(req.params.id);` suggests there's an external collection managing user sessions not included in this snippet
+    // Assuming onlineUsers is a Map or similar structure you're managing elsewhere
+    onlineUsers.delete(req.params.id);
     return res.status(200).send();
   } catch (ex) {
     next(ex);

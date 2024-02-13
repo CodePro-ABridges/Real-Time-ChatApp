@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { Buffer } from "buffer";
-import loader from "../assets/loader.gif";
+import loader from "../assets/work-in.gif";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { setAvatarRoute } from "../utils/APIRoutes";
+import { setAvatarRoute } from "../utils/mutations";
 export default function SetAvatar() {
   const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
@@ -22,17 +22,14 @@ export default function SetAvatar() {
   };
 
   useEffect(async () => {
-    if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))
-      navigate("/login");
+    if (!localStorage.getItem(process.env.KEY)) navigate("/login");
   }, []);
 
   const setProfilePicture = async () => {
     if (selectedAvatar === undefined) {
       toast.error("Please select an avatar", toastOptions);
     } else {
-      const user = await JSON.parse(
-        localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY),
-      );
+      const user = await JSON.parse(localStorage.getItem(process.env.KEY));
 
       const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
         image: avatars[selectedAvatar],
@@ -41,10 +38,7 @@ export default function SetAvatar() {
       if (data.isSet) {
         user.isAvatarImageSet = true;
         user.avatarImage = data.image;
-        localStorage.setItem(
-          process.env.REACT_APP_LOCALHOST_KEY,
-          JSON.stringify(user),
-        );
+        localStorage.setItem(process.env.KEY, JSON.stringify(user));
         navigate("/");
       } else {
         toast.error("Error setting avatar. Please try again.", toastOptions);
@@ -73,7 +67,7 @@ export default function SetAvatar() {
       ) : (
         <Container>
           <div className="title-container">
-            <h1>Pick an Avatar as your profile picture</h1>
+            <h1>Pick an Avatar</h1>
           </div>
           <div className="avatars">
             {avatars.map((avatar, index) => {
@@ -94,7 +88,7 @@ export default function SetAvatar() {
             })}
           </div>
           <button onClick={setProfilePicture} className="submit-btn">
-            Set as Profile Picture
+            Set Profile Picture
           </button>
           <ToastContainer />
         </Container>
@@ -109,7 +103,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 3rem;
-  background-color: #131324;
+  background-color: #0d0d21; /* Slightly darker shade for the background */
   height: 100vh;
   width: 100vw;
 
@@ -119,7 +113,7 @@ const Container = styled.div`
 
   .title-container {
     h1 {
-      color: white;
+      color: #e0e0e0; /* Soft white for text to reduce harsh contrast */
     }
   }
   .avatars {
@@ -140,11 +134,11 @@ const Container = styled.div`
       }
     }
     .selected {
-      border: 0.4rem solid #4e0eff;
+      border: 0.4rem solid #5a00e0; /* Adjusted to a deeper purple for a subtler look */
     }
   }
   .submit-btn {
-    background-color: #4e0eff;
+    background-color: #5a00e0; /* Matching the selected border color for consistency */
     color: white;
     padding: 1rem 2rem;
     border: none;
@@ -154,7 +148,7 @@ const Container = styled.div`
     font-size: 1rem;
     text-transform: uppercase;
     &:hover {
-      background-color: #4e0eff;
+      background-color: #6a30e0; /* Slightly lighter for hover effect, still within dark theme */
     }
   }
 `;

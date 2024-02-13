@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
-import Logo from "../assets/logo.svg";
+import Logo from "../assets/phone.svg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { loginRoute } from "../utils/apiRoutes.js";
-
+import { loginRoute } from "../utils/mutations";
+import Spline from "@splinetool/react-spline";
 export default function Login() {
   const navigate = useNavigate();
   const [values, setValues] = useState({ username: "", password: "" });
@@ -18,7 +18,7 @@ export default function Login() {
     theme: "dark",
   };
   useEffect(() => {
-    if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
+    if (localStorage.getItem(process.env.KEY)) {
       navigate("/");
     }
   }, []);
@@ -51,10 +51,7 @@ export default function Login() {
         toast.error(data.msg, toastOptions);
       }
       if (data.status === true) {
-        localStorage.setItem(
-          process.env.REACT_APP_LOCALHOST_KEY,
-          JSON.stringify(data.user),
-        );
+        localStorage.setItem(process.env.KEY, JSON.stringify(data.user));
 
         navigate("/");
       }
@@ -66,8 +63,13 @@ export default function Login() {
       <FormContainer>
         <form action="" onSubmit={(event) => handleSubmit(event)}>
           <div className="brand">
+            <Spline scene="https://prod.spline.design/SkjvHHxhMPN81ssi/scene.splinecode" />
+            <div>
+              {" "}
+              Manuver this image by holding on phone and moving mouse cursor{" "}
+            </div>
             <img src={Logo} alt="logo" />
-            <h1>snappy</h1>
+            <h1>Welcome to RealTalk</h1>
           </div>
           <input
             type="text"
@@ -82,9 +84,10 @@ export default function Login() {
             name="password"
             onChange={(e) => handleChange(e)}
           />
+
           <button type="submit">Log In</button>
           <span>
-            Don't have an account ? <Link to="/register">Create One.</Link>
+            <Link to="/signup">Click here to create an account</Link>
           </span>
         </form>
       </FormContainer>
@@ -99,20 +102,27 @@ const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1rem;
   align-items: center;
-  background-color: #131324;
+  background: #000; /* Pure black background */
+
   .brand {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 1rem;
     justify-content: center;
+    position: relative;
+
     img {
       height: 5rem;
+      z-index: 1;
     }
+
     h1 {
-      color: white;
+      color: #fff; /* White text for contrast */
       text-transform: uppercase;
+      font-size: 2rem;
+      z-index: 1;
     }
   }
 
@@ -120,44 +130,67 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    background-color: #00000076;
+    background-color: rgba(
+      255,
+      255,
+      255,
+      0.05
+    ); /* Slightly visible dark overlay */
+    backdrop-filter: blur(4px); /* Subtle frosted glass effect */
     border-radius: 2rem;
-    padding: 5rem;
+    padding: 3rem 5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7); /* Deep shadow for depth */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border highlight */
+    z-index: 2;
+    position: relative;
   }
+
   input {
     background-color: transparent;
     padding: 1rem;
-    border: 0.1rem solid #4e0eff;
-    border-radius: 0.4rem;
-    color: white;
-    width: 100%;
+    border: 2px solid #333; /* Darker border for inputs */
+    border-radius: 1rem;
+    color: #ddd; /* Soft white text */
     font-size: 1rem;
+
     &:focus {
-      border: 0.1rem solid #997af0;
+      border-color: #555; /* Slightly lighter border on focus */
       outline: none;
+      box-shadow: 0 0 0 2px #555; /* Focus shadow */
     }
   }
+
   button {
-    background-color: #4e0eff;
-    color: white;
+    background-color: #222; /* Dark button background */
+    color: #ddd; /* Soft white text */
     padding: 1rem 2rem;
     border: none;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 0.4rem;
+    border-radius: 1rem;
     font-size: 1rem;
     text-transform: uppercase;
+    transition:
+      background-color 0.3s,
+      box-shadow 0.3s;
+
     &:hover {
-      background-color: #4e0eff;
+      background-color: #333; /* Slightly lighter on hover */
+      box-shadow: 0 2px 20px rgba(255, 255, 255, 0.2); /* Subtle hover glow */
     }
   }
+
   span {
-    color: white;
-    text-transform: uppercase;
+    color: #ddd;
     a {
-      color: #4e0eff;
+      color: #999; /* Muted link color */
       text-decoration: none;
       font-weight: bold;
+
+      &:hover {
+        color: #bbb; /* Lighter grey on hover */
+        text-decoration: underline;
+      }
     }
   }
 `;

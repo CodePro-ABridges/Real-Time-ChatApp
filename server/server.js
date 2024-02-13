@@ -1,10 +1,11 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import { createServer } from "http";
 import { Server } from "socket.io";
-import authRoutes from "./utils/auth.js"; // Ensure paths are correct and use ".js" extension if necessary
-import messageRoutes from "./utils/messages.js"; // Ensure paths are correct and use ".js" extension if necessary
+import dotenv from "dotenv";
+import authRoutes from "./utils/auth.js"; // Adjust the path as necessary
+import messageRoutes from "./utils/messages.js"; // Adjust the path as necessary
 
 dotenv.config();
 
@@ -12,45 +13,47 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const connectDB = async () => {
+// Async function to connect to the database and start the server
+const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("connected to chatDB");
+    console.log("Connected to chatDB");
+
+    app.use("/api/auth", authRoutes);
+    app.use("/api/messages", messageRoutes);
+
+    const httpServer = createServer(app);
+    const io = new Server(httpServer, {
+      cors: {
+        origin: "http://localhost:3000",
+        credentials: true,
+      },
+    });
+
+    global.onlineUsers = new Map();
+    io.on("connection", (socket) => {
+      console.log("A user connected");
+      socket.on("add-user", (userId) => {
+        onlineUsers.set(userId, socket.id);
+      });
+
+      socket.on("send-msg", (data) => {
+        const sendUserSocket = onlineUsers.get(data.to);
+        if (sendUserSocket) {
+          socket.to(sendUserSocket).emit("msg-receive", data.msg);
+        }
+      });
+    });
+
+    httpServer.listen(process.env.PORT, () =>
+      console.log(`Server on ${process.env.PORT}`),
+    );
   } catch (err) {
-    console.log(err.message);
+    console.error("Database connection failed", err.message);
   }
 };
 
-connectDB();
-
-app.use("/api/auth", authRoutes);
-app.use("/api/messages", messageRoutes);
-
-const server = app.listen(process.env.PORT, () =>
-  console.log(`Server started on ${process.env.PORT}`),
-);
-// Changed 3000 --> 3001 may not work because of that
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3001",
-    credentials: true,
-  },
-});
-
-global.onlineUsers = new Map();
-io.on("connection", (socket) => {
-  console.log("User connected", socket.id);
-  socket.on("add-user", (userId) => {
-    onlineUsers.set(userId, socket.id);
-  });
-
-  socket.on("send-msg", (data) => {
-    const sendUserSocket = onlineUsers.get(data.to);
-    if (sendUserSocket) {
-      socket.to(sendUserSocket).emit("msg-receive", data.msg);
-    }
-  });
-});
+startServer();

@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Logo from "../assets/logo.svg";
+import Logo from "../assets/phone.svg";
 
 export default function Contacts({ contacts, changeChat }) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
   useEffect(async () => {
-    const data = await JSON.parse(
-      localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY),
-    );
+    const data = await JSON.parse(localStorage.getItem(process.env.KEY));
     setCurrentUserName(data.username);
     setCurrentUserImage(data.avatarImage);
   }, []);
@@ -23,7 +21,7 @@ export default function Contacts({ contacts, changeChat }) {
         <Container>
           <div className="brand">
             <img src={Logo} alt="logo" />
-            <h3>snappy</h3>
+            <h3>RealTalk Chat With Friends</h3>
           </div>
           <div className="contacts">
             {contacts.map((contact, index) => {
@@ -64,11 +62,12 @@ export default function Contacts({ contacts, changeChat }) {
     </>
   );
 }
+
 const Container = styled.div`
   display: grid;
   grid-template-rows: 10% 75% 15%;
   overflow: hidden;
-  background-color: #080420;
+  background-color: #f0e68c; /* A light khaki background, common in retro designs */
   .brand {
     display: flex;
     align-items: center;
@@ -78,7 +77,7 @@ const Container = styled.div`
       height: 2rem;
     }
     h3 {
-      color: white;
+      color: #8b4513; /* A saddle brown for text, offering a warm, earthy contrast */
       text-transform: uppercase;
     }
   }
@@ -91,13 +90,13 @@ const Container = styled.div`
     &::-webkit-scrollbar {
       width: 0.2rem;
       &-thumb {
-        background-color: #ffffff39;
+        background-color: #d2b48c; /* A tan color for the scrollbar, adding a subtle retro touch */
         width: 0.1rem;
         border-radius: 1rem;
       }
     }
     .contact {
-      background-color: #ffffff34;
+      background-color: #fff8dc; /* A cornsilk color for contact backgrounds, light and neutral */
       min-height: 5rem;
       cursor: pointer;
       width: 90%;
@@ -114,17 +113,17 @@ const Container = styled.div`
       }
       .username {
         h3 {
-          color: white;
+          color: #8b4513; /* Ensuring readability with a darker tone */
         }
       }
     }
     .selected {
-      background-color: #9a86f3;
+      background-color: #deb887; /* A light earthy brown for selected contacts, adding distinction */
     }
   }
 
   .current-user {
-    background-color: #0d0d30;
+    background-color: #bdb76b; /* Dark khaki for the current user section, adding depth */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -137,7 +136,7 @@ const Container = styled.div`
     }
     .username {
       h2 {
-        color: white;
+        color: white; /* Keeping text white for contrast against the darker background */
       }
     }
     @media screen and (min-width: 720px) and (max-width: 1080px) {

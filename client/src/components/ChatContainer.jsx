@@ -4,17 +4,15 @@ import ChatInput from "./ChatInput";
 import Logout from "./Logout";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
-import { sendMessageRoute, recieveMessageRoute } from "../utils/apiRoutes.js";
+import { sendMessageRoute, recieveMessageRoute } from "../utils/mutations";
 
-export default function ChatBox({ currentChat, socket }) {
+export default function ChatContainer({ currentChat, socket }) {
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
   useEffect(async () => {
-    const data = await JSON.parse(
-      localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY),
-    );
+    const data = await JSON.parse(localStorage.getItem(process.env.KEY));
     const response = await axios.post(recieveMessageRoute, {
       from: data._id,
       to: currentChat._id,
@@ -25,18 +23,14 @@ export default function ChatBox({ currentChat, socket }) {
   useEffect(() => {
     const getCurrentChat = async () => {
       if (currentChat) {
-        await JSON.parse(
-          localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY),
-        )._id;
+        await JSON.parse(localStorage.getItem(process.env.KEY))._id;
       }
     };
     getCurrentChat();
   }, [currentChat]);
 
   const handleSendMsg = async (msg) => {
-    const data = await JSON.parse(
-      localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY),
-    );
+    const data = await JSON.parse(localStorage.getItem(process.env.KEY));
     socket.current.emit("send-msg", {
       to: currentChat._id,
       from: data._id,
@@ -112,6 +106,7 @@ const Container = styled.div`
   grid-template-rows: 10% 80% 10%;
   gap: 0.1rem;
   overflow: hidden;
+  background-color: #f5f5dc; /* Beige background, common in retro designs */
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     grid-template-rows: 15% 70% 15%;
   }
@@ -120,6 +115,7 @@ const Container = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
+    background-color: #ffdead; /* A soft, retro nuance for the header */
     .user-details {
       display: flex;
       align-items: center;
@@ -127,11 +123,12 @@ const Container = styled.div`
       .avatar {
         img {
           height: 3rem;
+          border-radius: 50%; /* Adding a round shape for a softer look */
         }
       }
       .username {
         h3 {
-          color: white;
+          color: #8b4513; /* Darker brown for contrast and readability */
         }
       }
     }
@@ -142,10 +139,11 @@ const Container = styled.div`
     flex-direction: column;
     gap: 1rem;
     overflow: auto;
+    background-color: #faebd7; /* Antique white for a softer, warmer background */
     &::-webkit-scrollbar {
       width: 0.2rem;
       &-thumb {
-        background-color: #ffffff39;
+        background-color: #deb887; /* A caramel color for the scrollbar thumb */
         width: 0.1rem;
         border-radius: 1rem;
       }
@@ -159,7 +157,8 @@ const Container = styled.div`
         padding: 1rem;
         font-size: 1.1rem;
         border-radius: 1rem;
-        color: #d1d1d1;
+        color: #333; /* A darker shade for text to enhance readability */
+        background-color: #ffe4c4; /* A light bisque background for message bubbles */
         @media screen and (min-width: 720px) and (max-width: 1080px) {
           max-width: 70%;
         }
@@ -168,13 +167,13 @@ const Container = styled.div`
     .sended {
       justify-content: flex-end;
       .content {
-        background-color: #4f04ff21;
+        background-color: #ffa07a; /* A light salmon color for sent messages */
       }
     }
     .recieved {
       justify-content: flex-start;
       .content {
-        background-color: #9900ff20;
+        background-color: #90ee90; /* A light green for received messages, adding variety */
       }
     }
   }
